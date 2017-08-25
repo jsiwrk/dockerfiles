@@ -1,5 +1,7 @@
 FROM ubuntu:16.04
 
+LABEL maintainer="Joan Sala <jsiwrk+docker@gmail.com>"
+
 # Install prerequisites:
 RUN apt-get update && apt-get install -y \
 	curl \
@@ -62,7 +64,7 @@ RUN cd /root/work \
 RUN cd /root/work \
 	&& git clone https://github.com/rsyslog/rsyslog.git \
 	&& cd rsyslog \
-	&& git checkout v8-stable \
+	&& git checkout master \
 	&& autoreconf -fvi \
 	&& ./configure --enable-imfile --enable-omprog --enable-testbench --enable-imdiag --enable-omstdout \
 	&& make \
