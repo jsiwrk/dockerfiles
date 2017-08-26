@@ -12,12 +12,12 @@ You can use the container in various ways. You can for example use the following
 version: '2'
 
 services:
-logger:
-image: jsiwrk/rsyslog-dev
-network_mode: "bridge"
-volumes:
-  - ~/work/rsyslog:/root/work/rsyslog:rw
-  - ./config/rsyslog.d:/etc/rsyslog.d:ro
+  logger:
+    image: jsiwrk/rsyslog-dev
+    network_mode: "bridge"
+    volumes:
+      - ~/work/rsyslog:/root/work/rsyslog:rw
+      - ./config/rsyslog.d:/etc/rsyslog.d:ro
 ```
 
 Follow these steps:
