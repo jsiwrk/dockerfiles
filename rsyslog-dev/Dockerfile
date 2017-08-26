@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 LABEL maintainer="Joan Sala <jsiwrk+docker@gmail.com>"
 
-# Install prerequisites:
+# Install rsyslog build prerequisites:
 RUN apt-get update && apt-get install -y \
 	curl \
 	lsof \
@@ -18,8 +18,9 @@ RUN apt-get update && apt-get install -y \
 	bison \
 	valgrind
 
-# Install also Python (e.g. for testing of external plugins):
-RUN apt-get install -y python3
+# Install other useful tools:
+RUN apt-get update && apt-get install -y \
+	python3
 
 RUN mkdir -p /root/work
 
