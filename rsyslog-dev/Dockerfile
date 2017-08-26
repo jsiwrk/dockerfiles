@@ -18,11 +18,15 @@ RUN apt-get update && apt-get install -y \
 	bison \
 	valgrind
 
+# Install also Python (e.g. for testing of external plugins):
+RUN apt-get install -y python3
+
 RUN mkdir -p /root/work
 
+WORKDIR /root/work
+
 # Download, build and install libestr library from rsyslog project:
-RUN cd /root/work \
-	&& curl -O http://libestr.adiscon.com/files/download/libestr-0.1.10.tar.gz \
+RUN curl -O http://libestr.adiscon.com/files/download/libestr-0.1.10.tar.gz \
 	&& tar xzf libestr-0.1.10.tar.gz \
 	&& rm libestr-0.1.10.tar.gz \
 	&& cd libestr-0.1.10 \
@@ -31,8 +35,7 @@ RUN cd /root/work \
 	&& make install
 
 # Download, build and install libee library from rsyslog project:
-RUN cd /root/work \
-	&& curl -O http://www.libee.org/files/download/libee-0.4.1.tar.gz \
+RUN curl -O http://www.libee.org/files/download/libee-0.4.1.tar.gz \
 	&& tar xzf libee-0.4.1.tar.gz \
 	&& rm libee-0.4.1.tar.gz \
 	&& cd libee-0.4.1 \
@@ -41,8 +44,7 @@ RUN cd /root/work \
 	&& make install
 
 # Download, build and install liblogging library from rsyslog project:
-RUN cd /root/work \
-	&& curl -O http://download.rsyslog.com/liblogging/liblogging-1.0.6.tar.gz \
+RUN curl -O http://download.rsyslog.com/liblogging/liblogging-1.0.6.tar.gz \
 	&& tar xzf liblogging-1.0.6.tar.gz \
 	&& rm liblogging-1.0.6.tar.gz \
 	&& cd liblogging-1.0.6 \
@@ -51,8 +53,7 @@ RUN cd /root/work \
 	&& make install
 
 # Download, build and install libfastjson library from rsyslog project:
-RUN cd /root/work \
-	&& curl -O http://download.rsyslog.com/libfastjson/libfastjson-0.99.6.tar.gz \
+RUN curl -O http://download.rsyslog.com/libfastjson/libfastjson-0.99.6.tar.gz \
 	&& tar xzf libfastjson-0.99.6.tar.gz \
 	&& rm libfastjson-0.99.6.tar.gz \
 	&& cd libfastjson-0.99.6 \
@@ -61,8 +62,7 @@ RUN cd /root/work \
 	&& make install
 
 # Download rsyslog and build it:
-RUN cd /root/work \
-	&& git clone https://github.com/rsyslog/rsyslog.git \
+RUN git clone https://github.com/rsyslog/rsyslog.git \
 	&& cd rsyslog \
 	&& git checkout master \
 	&& autoreconf -fvi \
@@ -77,8 +77,7 @@ RUN mkdir -p /var/lib/rsyslog \
 # Copy rsyslog main config file:
 COPY ./etc/rsyslog.conf /etc/
 
-# Install Python (e.g. for testing of external plugins):
-RUN apt-get install -y python3
+WORKDIR /root/work/rsyslog
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
 
