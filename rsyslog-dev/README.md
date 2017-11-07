@@ -54,6 +54,14 @@ Follow these steps:
     ```
     $ docker exec -ti rsyslog_logger_1 bash
     ```
+1. If you want to run the tests, type:
+    ```
+    $ docker exec rsyslog_logger_1 make check
+    ```
+1. If you want to run an individual test, type:
+    ```
+    $ docker exec rsyslog_logger_1 make check TESTS="test-to-run.sh"
+    ```
 
 To stop the container, run the following:
 ```
