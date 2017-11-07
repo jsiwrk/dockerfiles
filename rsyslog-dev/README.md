@@ -13,6 +13,7 @@ version: '2'
 
 services:
   logger:
+    container_name: rsyslog
     image: jsiwrk/rsyslog-dev
     network_mode: "bridge"
     volumes:
@@ -29,38 +30,38 @@ Follow these steps:
     $ cd ~/work/docker/rsyslog
     $ docker-compose up -d
     ```
-1. Now a container named `rsyslog_logger_1` is running with your rsyslog source code and configuration files mounted. However, the installed rsyslog binaries are still the official ones. In the next steps we will recompile and reinstall rsyslog within the container from the source code in your host machine.
+1. Now a container named `rsyslog` is running with your rsyslog source code and configuration files mounted. However, the installed rsyslog binaries are still the official ones. In the next steps we will recompile and reinstall rsyslog within the container from the source code in your host machine.
 1. First you need to run `autoreconf` to initialize the build environment. This step is needed only once.
     ```
-    $ docker exec rsyslog_logger_1 autoreconf -fvi
+    $ docker exec rsyslog autoreconf -fvi
     ```
 1. You also need to run `configure` to define the rsyslog features to be built and installed. This step is needed only once, or whenever you want to change the features. For example, to enable `imfile`, `omprog` and the testbench, run the following command:
     ```
-    $ docker exec rsyslog_logger_1 ./configure --enable-imfile --enable-omprog --enable-testbench --enable-imdiag --enable-omstdout
+    $ docker exec rsyslog ./configure --enable-imfile --enable-omprog --enable-testbench --enable-imdiag --enable-omstdout
     ```
 1. Now the environment is ready to build rsyslog from the source code in your host machine. Simply type:
     ```
-    $ docker exec rsyslog_logger_1 make
+    $ docker exec rsyslog make
     ```
 1. And to install rsyslog:
     ```
-    $ docker exec rsyslog_logger_1 make install
+    $ docker exec rsyslog make install
     ```
 1. At this point the container has your own rsyslog installed, but rsyslog is still not running. To start the daemon, type:
     ```
-    $ docker exec rsyslog_logger_1 rsyslogd
+    $ docker exec rsyslog rsyslogd
     ```
 1. Or, if you prefer to start a shell session in the container:
     ```
-    $ docker exec -ti rsyslog_logger_1 bash
+    $ docker exec -ti rsyslog bash
     ```
 1. If you want to run the tests, type:
     ```
-    $ docker exec rsyslog_logger_1 make check
+    $ docker exec rsyslog make check
     ```
 1. If you want to run an individual test, type:
     ```
-    $ docker exec rsyslog_logger_1 make check TESTS="test-to-run.sh"
+    $ docker exec rsyslog make check TESTS="test-to-run.sh"
     ```
 
 To stop the container, run the following:
