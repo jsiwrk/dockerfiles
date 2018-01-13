@@ -12,7 +12,7 @@ You can use the container in various ways. You can for example use the following
 version: '2'
 
 services:
-  logger:
+  rsyslog:
     container_name: rsyslog
     image: jsiwrk/rsyslog-dev
     network_mode: "bridge"

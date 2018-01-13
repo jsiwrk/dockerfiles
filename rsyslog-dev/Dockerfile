@@ -16,7 +16,9 @@ RUN apt-get update && apt-get install -y \
 	libgcrypt11-dev \
 	flex \
 	bison \
-	valgrind
+	valgrind \
+        python-docutils \
+        libcurl4-gnutls-dev
 
 # Install other useful tools:
 RUN apt-get update && apt-get install -y \
@@ -54,10 +56,10 @@ RUN curl -O http://download.rsyslog.com/liblogging/liblogging-1.0.6.tar.gz \
 	&& make install
 
 # Download, build and install libfastjson library from rsyslog project:
-RUN curl -O http://download.rsyslog.com/libfastjson/libfastjson-0.99.7.tar.gz \
-	&& tar xzf libfastjson-0.99.7.tar.gz \
-	&& rm libfastjson-0.99.7.tar.gz \
-	&& cd libfastjson-0.99.7 \
+RUN curl -O http://download.rsyslog.com/libfastjson/libfastjson-0.99.8.tar.gz \
+	&& tar xzf libfastjson-0.99.8.tar.gz \
+	&& rm libfastjson-0.99.8.tar.gz \
+	&& cd libfastjson-0.99.8 \
 	&& ./configure --libdir=/usr/lib --includedir=/usr/include \
 	&& make \
 	&& make install
