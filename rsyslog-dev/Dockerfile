@@ -17,11 +17,12 @@ RUN apt-get update && apt-get install -y \
 	flex \
 	bison \
 	valgrind \
-        python-docutils \
-        libcurl4-gnutls-dev
+    python-docutils \
+    libcurl4-gnutls-dev
 
 # Install other useful tools:
 RUN apt-get update && apt-get install -y \
+	net-tools \
 	python3
 
 RUN mkdir -p /root/work
