@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
     libcurl4-gnutls-dev
 
 # Install other useful tools:
-RUN apt-get update && apt-get install -y \
+RUN apt-get install -y \
 	net-tools \
 	python3
 
@@ -80,6 +80,20 @@ RUN mkdir -p /var/lib/rsyslog \
 
 # Copy rsyslog main config file:
 COPY ./etc/rsyslog.conf /etc/
+
+# Bash required for the RUN command that follows
+SHELL ["/bin/bash", "-c"]
+
+# Download the rsyslog-doc repo and generate the HTML documentation:
+RUN curl https://bootstrap.pypa.io/get-pip.py | python \
+	&& python -m pip install virtualenv --user \
+	&& python -m virtualenv rsyslog-doc-build \
+	&& source rsyslog-doc-build/bin/activate \
+	&& git clone https://github.com/rsyslog/rsyslog-doc.git \
+	&& cd rsyslog-doc \
+	&& git checkout master \
+	&& pip install -r requirements.txt \
+	&& sphinx-build -b html source build
 
 WORKDIR /root/work/rsyslog
 
