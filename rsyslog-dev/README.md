@@ -19,6 +19,11 @@ services:
     volumes:
       - ~/work/rsyslog:/root/work/rsyslog:rw
       - ./config/rsyslog.d:/etc/rsyslog.d:ro
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+      - apparmor:unconfined
 ```
 
 Follow these steps:
