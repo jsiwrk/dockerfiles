@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+cd $WORK_DIR
+
+if [[ ! -d rsyslog-doc ]]; then
+	git clone --single-branch --branch master https://github.com/rsyslog/rsyslog-doc.git
+fi
+
+if [[ ! -d rsyslog-doc-build ]]; then
+	python3 -m virtualenv rsyslog-doc-build
+	source rsyslog-doc-build/bin/activate
+	cd rsyslog-doc
+	pip install -r requirements.txt
+else
+	source rsyslog-doc-build/bin/activate
+	cd rsyslog-doc
+fi
+
+sphinx-build -b html source build

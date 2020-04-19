@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+cd $WORK_DIR
+
+if [[ ! -d rsyslog ]]; then
+	git clone --single-branch --branch master https://github.com/rsyslog/rsyslog.git
+fi
+
+cd rsyslog
+autoreconf -fvi
+./configure $BUILD_OPTS
+make

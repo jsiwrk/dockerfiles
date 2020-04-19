@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+cd $WORK_DIR/rsyslog
+if [[ -n "$1" ]]; then
+    make check TESTS="$(find tests -maxdepth 1 -name '$1*.sh' -printf '%P\n' | sort | tr '\n' ' ')"
+else
+    make check
+fi

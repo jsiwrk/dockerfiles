@@ -1,8 +1,10 @@
 FROM ubuntu:18.04
 
 ARG user=developer
+ARG group=developer
 ARG uid=1000
 ARG gid=1000
+ARG work_dir=/home/developer/work/rsyslog
 
 LABEL maintainer="Joan Sala <jsiwrk+docker@gmail.com>"
 
@@ -28,23 +30,22 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get install -y \
 	net-tools \
 	python3 \
+	python3-pip \
 	sudo
 
 # Create developer user and make it a sudoer:
-RUN groupadd -g ${gid} ${user} \
-	&& useradd -u ${uid} -g ${gid} -G sudo -m ${user} \
+RUN groupadd -g ${gid} ${group} \
+	&& useradd -u ${uid} -g ${gid} -G ${group},sudo -m ${user} \
+	&& echo 'Defaults umask_override' >> /etc/sudoers \
+	&& echo 'Defaults umask=0000' >> /etc/sudoers \
 	&& echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER ${user}
 
-# Configure bash:
-RUN mkdir /home/${user}/work \
-	&& mkdir /home/${user}/.bashrc.d \
-	&& echo 'source <(cat ~/.bashrc.d/*)' >> ~/.bashrc
+# Create working directory (where the rsyslog and related repos will be downloaded):
+RUN mkdir -p ${work_dir}
 
-COPY --chown=${uid}:${gid} bashrc.d/*  /home/${user}/.bashrc.d/
-
-WORKDIR /home/${user}/work
+WORKDIR ${work_dir}
 
 # Download, build and install libestr library from rsyslog project:
 RUN curl -O https://libestr.adiscon.com/files/download/libestr-0.1.11.tar.gz \
@@ -82,42 +83,16 @@ RUN curl -O https://download.rsyslog.com/libfastjson/libfastjson-0.99.8.tar.gz \
 	&& make \
 	&& sudo make install
 
-# Download rsyslog and build it:
-RUN git clone --single-branch --branch master https://github.com/rsyslog/rsyslog.git \
-	&& cd rsyslog \
-	&& git checkout master \
-	&& autoreconf -fvi \
-	&& ./configure --enable-imfile --enable-omprog --enable-testbench --enable-imdiag --enable-omstdout \
-	&& make \
-	&& sudo make install
+# Install the Python virtualenv package (for building the doc):
+RUN python3 -m pip install virtualenv --user
 
-# Create rsyslog working and config directories:
-RUN sudo mkdir -p /var/lib/rsyslog \
-	&& sudo mkdir -p /etc/rsyslog.d
+# Create rsyslog data directory (referenced from the sample config):
+RUN sudo mkdir -p /var/lib/rsyslog
 
-# Copy rsyslog main config file:
-COPY ./etc/rsyslog.conf /etc/
+# Copy our scripts:
+RUN mkdir -p /home/${user}/.local/bin \
+	&& mkdir -p /home/${user}/.bashrc.d \
+	&& echo 'source <(cat ~/.bashrc.d/*)' >> ~/.bashrc
 
-# Bash required for the RUN command that follows
-SHELL ["/bin/bash", "-c"]
-
-# Download the rsyslog-doc repo and generate the HTML documentation:
-RUN curl https://bootstrap.pypa.io/get-pip.py | python \
-	&& python -m pip install virtualenv --user \
-	&& python -m virtualenv rsyslog-doc-build \
-	&& source rsyslog-doc-build/bin/activate \
-	&& git clone https://github.com/rsyslog/rsyslog-doc.git \
-	&& cd rsyslog-doc \
-	&& git checkout master \
-	&& pip install -r requirements.txt \
-	&& sphinx-build -b html source build
-
-WORKDIR /home/${user}/work/rsyslog
-
-ENTRYPOINT ["tail", "-f", "/dev/null"]
-
-# To start the rsyslog daemon, run 'rsyslogd -n' inside the container.
-# To stop the daemon, run 'kill $(cat /var/run/rsyslogd.pid)'.
-
-# Or you can use this entrypoint:
-# ENTRYPOINT [ "rsyslogd", "-f", "/etc/rsyslog.conf", "-n" ]
+COPY --chown=${uid}:${gid} bashrc.d/*  /home/${user}/.bashrc.d/
+COPY --chown=${uid}:${gid} utils/ /home/${user}/.local/bin
