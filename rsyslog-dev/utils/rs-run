@@ -1,3 +1,4 @@
 #!/bin/bash -e
 
+type rsyslogd >/dev/null 2>&1 || rs-install
 sudo -E rsyslogd -f /etc/rsyslog.conf "$@"

@@ -1,4 +1,4 @@
 #!/bin/bash -e
 
 pid=$(sudo cat /var/run/rsyslogd.pid)
-sudo kill $(pid)
+sudo kill $pid
