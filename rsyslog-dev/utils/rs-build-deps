@@ -1,0 +1,56 @@
+#!/bin/bash -e
+
+LIBESTR_VERSION=0.1.11
+LIBEE_VERSION=0.4.1
+LIBLOGGING_VERSION=1.0.6
+LIBFASTJSON_VERSION=0.99.8
+
+cd $WORK_DIR
+
+if [[ ! -d libestr ]]; then
+	curl -O https://libestr.adiscon.com/files/download/libestr-$LIBESTR_VERSION.tar.gz
+	tar xzf libestr-$LIBESTR_VERSION.tar.gz
+	rm libestr-$LIBESTR_VERSION.tar.gz
+	mv libestr-$LIBESTR_VERSION libestr
+	cd libestr
+	./configure --libdir=/usr/lib --includedir=/usr/include
+	make
+	sudo make install
+	cd ..
+fi
+
+if [[ ! -d libee ]]; then
+	curl -O http://www.libee.org/files/download/libee-$LIBEE_VERSION.tar.gz
+	tar xzf libee-$LIBEE_VERSION.tar.gz
+	rm libee-$LIBEE_VERSION.tar.gz
+	mv libee-$LIBEE_VERSION libee
+	cd libee
+	./configure --libdir=/usr/lib --includedir=/usr/include
+	make
+	sudo make install
+	cd ..
+fi
+
+if [[ ! -d liblogging ]]; then
+	curl -O https://download.rsyslog.com/liblogging/liblogging-$LIBLOGGING_VERSION.tar.gz
+	tar xzf liblogging-$LIBLOGGING_VERSION.tar.gz
+	rm liblogging-$LIBLOGGING_VERSION.tar.gz
+	mv liblogging-$LIBLOGGING_VERSION liblogging
+	cd liblogging
+	./configure --libdir=/usr/lib --includedir=/usr/include
+	make
+	sudo make install
+	cd ..
+fi
+
+if [[ ! -d libfastjson ]]; then
+	curl -O https://download.rsyslog.com/libfastjson/libfastjson-$LIBFASTJSON_VERSION.tar.gz
+	tar xzf libfastjson-$LIBFASTJSON_VERSION.tar.gz
+	rm libfastjson-$LIBFASTJSON_VERSION.tar.gz
+	mv libfastjson-$LIBFASTJSON_VERSION libfastjson
+	cd libfastjson
+	./configure --libdir=/usr/lib --includedir=/usr/include
+	make
+	sudo make install
+	cd ..
+fi

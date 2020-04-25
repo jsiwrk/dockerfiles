@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+rs-build-deps
+
 cd $WORK_DIR
 
 if [[ ! -d rsyslog ]]; then

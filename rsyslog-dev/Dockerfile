@@ -47,47 +47,11 @@ RUN mkdir -p ${work_dir}
 
 WORKDIR ${work_dir}
 
-# Download, build and install libestr library from rsyslog project:
-RUN curl -O https://libestr.adiscon.com/files/download/libestr-0.1.11.tar.gz \
-	&& tar xzf libestr-0.1.11.tar.gz \
-	&& rm libestr-0.1.11.tar.gz \
-	&& cd libestr-0.1.11 \
-	&& ./configure --libdir=/usr/lib --includedir=/usr/include \
-	&& make \
-	&& sudo make install
-
-# Download, build and install libee library from rsyslog project:
-RUN curl -O http://www.libee.org/files/download/libee-0.4.1.tar.gz \
-	&& tar xzf libee-0.4.1.tar.gz \
-	&& rm libee-0.4.1.tar.gz \
-	&& cd libee-0.4.1 \
-	&& ./configure --libdir=/usr/lib --includedir=/usr/include \
-	&& make \
-	&& sudo make install
-
-# Download, build and install liblogging library from rsyslog project:
-RUN curl -O https://download.rsyslog.com/liblogging/liblogging-1.0.6.tar.gz \
-	&& tar xzf liblogging-1.0.6.tar.gz \
-	&& rm liblogging-1.0.6.tar.gz \
-	&& cd liblogging-1.0.6 \
-	&& ./configure --libdir=/usr/lib --includedir=/usr/include \
-	&& make \
-	&& sudo make install
-
-# Download, build and install libfastjson library from rsyslog project:
-RUN curl -O https://download.rsyslog.com/libfastjson/libfastjson-0.99.8.tar.gz \
-	&& tar xzf libfastjson-0.99.8.tar.gz \
-	&& rm libfastjson-0.99.8.tar.gz \
-	&& cd libfastjson-0.99.8 \
-	&& ./configure --libdir=/usr/lib --includedir=/usr/include \
-	&& make \
-	&& sudo make install
+# Create rsyslog data directory (referenced from the sample config):
+RUN sudo mkdir -p /var/lib/rsyslog
 
 # Install the Python virtualenv package (for building the doc):
 RUN python3 -m pip install virtualenv --user
-
-# Create rsyslog data directory (referenced from the sample config):
-RUN sudo mkdir -p /var/lib/rsyslog
 
 # Copy our scripts:
 RUN mkdir -p /home/${user}/.local/bin \
@@ -95,4 +59,4 @@ RUN mkdir -p /home/${user}/.local/bin \
 	&& echo 'source <(cat ~/.bashrc.d/*)' >> ~/.bashrc
 
 COPY --chown=${uid}:${gid} bashrc.d/*  /home/${user}/.bashrc.d/
-COPY --chown=${uid}:${gid} utils/ /home/${user}/.local/bin
+COPY --chown=${uid}:${gid} utils/  /home/${user}/.local/bin
