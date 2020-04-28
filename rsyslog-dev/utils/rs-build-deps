@@ -14,10 +14,10 @@ if [[ ! -d libestr ]]; then
 	mv libestr-$LIBESTR_VERSION libestr
 	cd libestr
 	./configure --libdir=/usr/lib --includedir=/usr/include
-	make
-	sudo make install
 	cd ..
 fi
+
+type /usr/lib/libestr.so >/dev/null 2>&1 || (cd libestr; sudo make install)
 
 if [[ ! -d libee ]]; then
 	curl -O http://www.libee.org/files/download/libee-$LIBEE_VERSION.tar.gz
@@ -26,10 +26,10 @@ if [[ ! -d libee ]]; then
 	mv libee-$LIBEE_VERSION libee
 	cd libee
 	./configure --libdir=/usr/lib --includedir=/usr/include
-	make
-	sudo make install
 	cd ..
 fi
+
+type /usr/lib/libee.so >/dev/null 2>&1 || (cd libee; sudo make install)
 
 if [[ ! -d liblogging ]]; then
 	curl -O https://download.rsyslog.com/liblogging/liblogging-$LIBLOGGING_VERSION.tar.gz
@@ -38,10 +38,10 @@ if [[ ! -d liblogging ]]; then
 	mv liblogging-$LIBLOGGING_VERSION liblogging
 	cd liblogging
 	./configure --libdir=/usr/lib --includedir=/usr/include
-	make
-	sudo make install
 	cd ..
 fi
+
+type /usr/lib/liblogging.so >/dev/null 2>&1 || (cd liblogging; sudo make install)
 
 if [[ ! -d libfastjson ]]; then
 	curl -O https://download.rsyslog.com/libfastjson/libfastjson-$LIBFASTJSON_VERSION.tar.gz
@@ -50,7 +50,7 @@ if [[ ! -d libfastjson ]]; then
 	mv libfastjson-$LIBFASTJSON_VERSION libfastjson
 	cd libfastjson
 	./configure --libdir=/usr/lib --includedir=/usr/include
-	make
-	sudo make install
 	cd ..
 fi
+
+type /usr/lib/libfastjson.so >/dev/null 2>&1 || (cd libfastjson; sudo make install)
