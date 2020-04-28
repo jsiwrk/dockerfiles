@@ -4,9 +4,14 @@ A docker image for building rsyslog v8 from the source code. Allows you to edit 
 
 How to use
 ----------
-1. Clone this repo (for example, in `~/work/dockerfiles`).
-1. Create the directory you want to use as your workspace for building rsyslog and the related projects (for example, `~/work/rsyslog`). This directory will be mounted in the container with read-write permissions.
-1. Define an alias like the following, and place it in your `~/.bashrc` file. You will use this alias to start the container. As the value of the `--workdir` argument, specify the directory you have created in the previous step.
+1. Create the directory you want to use as your workspace for building rsyslog and its related projects (for example, `~/work/rsyslog`). This directory will be mounted in the container with read-write permissions. We'll refer to this directory as the _workspace directory_.
+1. Optionally, clone your fork of the official rsyslog repo in the workspace directory. If you omit this step, the `rs-build` command (explained below) will automatically clone the master branch of the official GitHub repo.
+    ```
+    cd ~/work/rsyslog
+    git clone https://github.com/YOUR_USER/rsyslog.git
+    ```
+1. Clone this repo somewhere (for example, in `~/work/dockerfiles`).
+1. Define an alias like the following, and place it in your `~/.bashrc` file. You will use this alias to start the container. As the value of the `--workdir` argument, specify the chosen workspace directory.
     ```
     alias rsd='~/work/dockerfiles/rsyslog-dev/start.sh --workdir ~/work/rsyslog'
     ```
@@ -23,7 +28,7 @@ How to use
     ```
     yourname@rsyslog:~/work/rsyslog$ 
     ```
-1. Inside the container, type the following command to build rsyslog from the source code. This will clone the master branch of the rsyslog repository from GitHub, configure the build, and compile the code. The repo will be cloned in `~/work/rsyslog/rsyslog`.
+1. Inside the container, type the following command to build rsyslog from the source code. This will clone the rsyslog GitHub repo in `~/work/rsyslog/rsyslog` (if that directory does not exist yet), configure the build, and compile the code.
     ```
     yourname@rsyslog:~/work/rsyslog$ rs-build
     ```
@@ -37,7 +42,7 @@ Instead of starting an interactive bash session, you can specify a (single) comm
     rsd make
     ```
 
-The directory where the command is executed is determined as follows. Assuming the workspace specified in the `--workdir` argument is `~/work/rsyslog`:
+The directory where the command is executed is determined as follows. Assuming the workspace directory (the value specified in the `--workdir` argument) is `~/work/rsyslog`:
 a. If your current directory (in the host machine) is a subdirectory of `~/work/rsyslog`, the command will be executed in that subdirectory.
 b. Otherwise, if the directory `~/work/rsyslog/rsyslog` exists, the command will be executed there.
 c. Otherwise, the command will be executed in `~/work/rsyslog`.
@@ -55,7 +60,7 @@ Type `rsd --help` for details about the available options.
 
 Environment variables inside the container
 ------------------------------------------
-The first time you run the `rsd` command, it will create a file `.rsd_env` in your workspace (for example, `~/work/rsyslog/.rsd_env`). The variables you define in this file will be visible as environment variables inside the container. If you change this file, the `rsd` command will automatically restart the container.
+The first time you run the `rsd` command, it will create a file `.rsd_env` in the workspace directory (for example, `~/work/rsyslog/.rsd_env`). The variables you define in this file will be visible as environment variables inside the container. If you change this file, the `rsd` command will automatically restart the container.
 
 The `WORK_DIR` variable is also defined inside the container, with the same value as the `--workdir` argument included in the `rsd` alias definition.
 
