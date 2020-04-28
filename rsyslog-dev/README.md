@@ -8,11 +8,11 @@ How to use
 1. Create the directory you want to use as your workspace for building rsyslog and the related projects (for example, `~/work/rsyslog`). This directory will be mounted in the container with read-write permissions.
 1. Define an alias like the following, and place it in your `~/.bashrc` file. You will use this alias to start the container. As the value of the `--workdir` argument, specify the directory you have created in the previous step.
     ```
-    alias rsd='~/work/dockerfiles/rsyslog-dev/start.sh --workdir=~/work/rsyslog'
+    alias rsd='~/work/dockerfiles/rsyslog-dev/start.sh --workdir ~/work/rsyslog'
     ```
     Optionally, you can also specify the argument `--config` in the alias definition. Its value must be a directory containing a rsyslog configuration file named `rsyslog.conf` and a (possibly empty) subdirectory `rsyslog.d`. Both will be mounted in the container as read-only. For example:
     ```
-    alias rsd='~/work/dockerfiles/rsyslog-dev/start.sh --workdir=~/work/rsyslog --config ~/work/rsyslog/test/config'
+    alias rsd='~/work/dockerfiles/rsyslog-dev/start.sh --workdir ~/work/rsyslog --config ~/work/rsyslog/test/config'
     ```
     If the `--config` argument is not specified, it defaults to the `etc` directory included in this project (`~/work/dockerfiles/rsyslog-dev/etc`), which contains a sample rsyslog configuration. 
 1. Now you can start the container by simply typing the alias. The first time it will take a while for the container to start, since the image needs to be built.
